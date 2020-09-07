@@ -23,14 +23,14 @@ describe Oystercard do
     expect { subject.top_up(100) }.to raise_error "The maximum is #{Oystercard::MAX_BALANCE}"
   end
 
-  it 'has a deduct method' do
-    expect(subject).to respond_to(:deduct).with(1).argument
-  end
+  #it 'has a deduct method' do
+  #  expect(subject).to respond_to(:deduct).with(1).argument
+  #end
 
-  it "deducts the fare from the balance" do
-    subject.top_up(10)
-    expect(subject.deduct(5)).to eq 5
-  end
+  #it "deducts the fare from the balance" do
+   # subject.top_up(10)
+   # expect(subject.deduct(5)).to eq 5
+  #end
 
   it "has an 'in_journey?' method" do
     expect(subject).to respond_to(:in_journey?)
