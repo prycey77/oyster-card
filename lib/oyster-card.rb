@@ -18,7 +18,7 @@ class Oystercard
     @travelling
   end
   
-  def touch_in
+  def touch_in(station)
     raise "Insufficient funds" if @balance < 1
     @travelling = true 
   end

@@ -50,25 +50,31 @@ describe Oystercard do
 
   it "sets @travelling to true when touch in is called" do
     subject.balance = 50
-    subject.touch_in
+    subject.touch_in("Mayfair")
     expect(subject.in_journey?).to eq true
   end
 
   it "sets @travelling to false when touch_out is called" do
     subject.balance = 2
-    subject.touch_in
+    subject.touch_in("Mayfair")
     subject.touch_out
     expect(subject.in_journey?).to eq false
   end
 
   it "raises insufficient funds error if balance is below 1 when touching in" do
-    expect {subject.touch_in}.to raise_error "Insufficient funds"
+    expect {subject.touch_in("Mayfair")}.to raise_error "Insufficient funds"
   end
 
   it "deducts the minimum fare from balance on touch_out" do
     subject.balance = 5
-    subject.touch_in
+    subject.touch_in("Mayfair")
     expect {subject.touch_out}. to change{subject.balance}.by((Oystercard::MINIMUM_FARE)/-1)
   end
-
+  let(:station) {double :station} 
+  
+  it "Stores the entry station" do
+    subject.balance = 10
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq station
+  end
 end
