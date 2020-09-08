@@ -31,5 +31,12 @@ end
     !!entry_station
   end
   
+  def fare 
+   if @entry_station != nil && @exit_station != nil
+    return -1
+   elsif @entry_station !=nil || @exit_station != nil
+    return -6
+   end 
 
+  end 
 end

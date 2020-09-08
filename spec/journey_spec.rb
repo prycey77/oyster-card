@@ -33,6 +33,16 @@ let(:journey) { { :beginning => entry_station, :end => exit_station} }
     expect(subject.in_journey?).to eq false
   end
 
+  it "returns a minimum fare" do
+  subject.touch_in(entry_station)
+  subject.touch_out(exit_station)
+  expect(subject.fare).to eq -1 
+  end
+
+  it "returns a penalty fare" do 
+  subject.touch_in(entry_station)
+  expect(subject.fare).to eq -6
+  end 
   ## move over to oyster_spec?
   #it "raises insufficient funds error if balance is below 1 when touching in" do
   #  expect {subject.touch_in(entry_station)}.to raise_error "Insufficient funds"
