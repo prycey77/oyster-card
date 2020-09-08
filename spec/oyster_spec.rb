@@ -1,7 +1,8 @@
 require 'oyster-card'
 describe Oystercard do
-let(:station) { double :station }
-
+let(:entry_station) { double :station }
+let(:exit_station) { double :station }
+let(:journey) { { :beginning => entry_station, :end => exit_station} }
   it 'is an instance of oystercard' do
     expect(subject).to be_an_instance_of(Oystercard)
   end
@@ -51,36 +52,45 @@ let(:station) { double :station }
 
   it "sets @travelling to true when touch in is called" do
     subject.balance = 50
-    subject.touch_in("Mayfair")
+    subject.touch_in(entry_station)
     expect(subject.in_journey?).to eq true
   end
 
   it "sets @travelling to false when touch_out is called" do
     subject.balance = 2
-    subject.touch_in("Mayfair")
-    subject.touch_out("Paddington")
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
     expect(subject.in_journey?).to eq false
   end
 
   it "raises insufficient funds error if balance is below 1 when touching in" do
-    expect {subject.touch_in("Mayfair")}.to raise_error "Insufficient funds"
+    expect {subject.touch_in(entry_station)}.to raise_error "Insufficient funds"
   end
 
   it "deducts the minimum fare from balance on touch_out" do
     subject.balance = 5
-    subject.touch_in("Mayfair")
-    expect {subject.touch_out("Paddington") }. to change{subject.balance}.by((Oystercard::MINIMUM_FARE)/-1)
+    subject.touch_in(entry_station)
+    expect {subject.touch_out(exit_station) }. to change{subject.balance}.by((Oystercard::MINIMUM_FARE)/-1)
   end
 
   
   it "Stores the entry station" do
     subject.balance = 10
-    subject.touch_in(station)
-    expect(subject.entry_station).to eq station
+    subject.touch_in(entry_station)
+    expect(subject.entry_station).to eq entry_station
   end
   
   it "Stores the exit station" do 
-    subject.touch_out(station)
-    expect(subject.exit_station).to eq station
+    subject.touch_out(exit_station)
+    expect(subject.exit_station).to eq exit_station
   end 
+  it "The journey list is empty by default" do
+    expect(subject.journeys).to be_empty
+  end
+  it "Adds a journey to the journey hash" do
+    subject.balance = 10
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
+    expect(subject.journeys).to eq journey 
+  end
 end
