@@ -1,5 +1,6 @@
 require 'oyster-card'
 describe Oystercard do
+let(:station) { double :station }
 
   it 'is an instance of oystercard' do
     expect(subject).to be_an_instance_of(Oystercard)
@@ -57,7 +58,7 @@ describe Oystercard do
   it "sets @travelling to false when touch_out is called" do
     subject.balance = 2
     subject.touch_in("Mayfair")
-    subject.touch_out
+    subject.touch_out("Paddington")
     expect(subject.in_journey?).to eq false
   end
 
@@ -68,13 +69,18 @@ describe Oystercard do
   it "deducts the minimum fare from balance on touch_out" do
     subject.balance = 5
     subject.touch_in("Mayfair")
-    expect {subject.touch_out}. to change{subject.balance}.by((Oystercard::MINIMUM_FARE)/-1)
+    expect {subject.touch_out("Paddington") }. to change{subject.balance}.by((Oystercard::MINIMUM_FARE)/-1)
   end
-  let(:station) {double :station} 
+
   
   it "Stores the entry station" do
     subject.balance = 10
     subject.touch_in(station)
     expect(subject.entry_station).to eq station
   end
+  
+  it "Stores the exit station" do 
+    subject.touch_out(station)
+    expect(subject.exit_station).to eq station
+  end 
 end
